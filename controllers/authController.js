@@ -20,7 +20,7 @@ const generateAccessToken = (id, username, role) => {
 class authController {
   async registration(req, res) {
     const { name, password, phone, role, born_date } = req.body;
-    if (!name || !password || !phone || !role || !born_date) {
+    if (!name || !password || !phone || !born_date) {
       return res.status(400).json({ message: "Barcha maydonlarni to'ldiring" });
     } else {
       const isUser = await prisma.users.findUnique({
