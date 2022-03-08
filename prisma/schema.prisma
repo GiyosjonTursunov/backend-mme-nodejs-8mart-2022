@@ -1,0 +1,140 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model roles {
+  id    Int     @id @default(autoincrement())
+  role  String  @unique @db.VarChar(255)
+  users users[]
+}
+
+model users {
+  id           Int       @id @default(autoincrement())
+  username     String    @unique @db.VarChar(255)
+  password     String    @db.VarChar(255)
+  name         String    @db.VarChar(255)
+  phone        String    @db.VarChar(10)
+  born_date    String?   @db.VarChar(255)
+  user_picture String?
+  role_id      Int
+  magazine_id  Int?
+  date_created String    @db.VarChar(255)
+  magazins     magazins? @relation(fields: [magazine_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  roles        roles     @relation(fields: [role_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  dress        dress[]
+  sale         sale[]
+}
+
+model balance {
+  id                   Int    @id @default(autoincrement())
+  balance              String @db.VarChar(255)
+  left_balance         String @default(dbgenerated("0")) @db.VarChar(255)
+  date_created_updated String @db.VarChar(255)
+}
+
+model balance_history {
+  id           Int     @id @default(autoincrement())
+  add_balance  String? @db.VarChar(255)
+  get_balance  String? @db.VarChar(255)
+  note         String
+  report       Boolean @default(false)
+  date_created String  @db.VarChar(255)
+}
+
+model costs {
+  id           Int      @id @default(autoincrement())
+  name         String   @db.VarChar(255)
+  number       String   @db.VarChar(255)
+  amount       String   @db.VarChar(255)
+  price        String   @db.VarChar(255)
+  note         String
+  is_serio     Boolean? @default(true)
+  date_created String   @db.VarChar(255)
+}
+
+model dress {
+  id           Int    @id @default(autoincrement())
+  name         String @db.VarChar(50)
+  price        String @db.VarChar(255)
+  img          String
+  date_created String @db.VarChar(255)
+  user_id      Int
+  users        users  @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  sale         sale[]
+}
+
+model salonlist {
+  id            Int    @id @default(autoincrement())
+  salonchi_name String @db.VarChar(255)
+  salon_name    String @unique @db.VarChar(255)
+  address       String @db.VarChar(255)
+  phone         String @db.VarChar(20)
+  date_created  String @db.VarChar(255)
+  user_id       Int
+  sale          sale[]
+}
+
+model sale {
+  id                Int       @id @default(autoincrement())
+  isfifty           Boolean?  @default(false)
+  dress_id          Int
+  dress_count       String?   @db.VarChar(255)
+  main_price        String?   @db.VarChar(255)
+  dress_note        String
+  given_price       String?   @db.VarChar(255)
+  left_price        String?   @db.VarChar(255)
+  date_left_price   String?   @db.VarChar(255)
+  sold_by_phone     Boolean?  @default(false)
+  salon_id          Int
+  delivery_date     String?   @db.VarChar(255)
+  need_send         Boolean?  @default(false)
+  delivered         Boolean?  @default(false)
+  canceled          Boolean?  @default(false)
+  girl_name         String?   @db.VarChar(255)
+  wedding_date      String?   @db.VarChar(255)
+  ispassport        Boolean?  @default(false)
+  salon_given_price String?   @db.VarChar(255)
+  date_created      String    @db.VarChar(255)
+  user_id           Int
+  dress             dress     @relation(fields: [dress_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  salonlist         salonlist @relation(fields: [salon_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users             users     @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model magazins {
+  id            Int     @id @default(autoincrement())
+  name          String  @db.VarChar(255)
+  img           String?
+  money         String? @db.VarChar(255)
+  saled_dresses String? @default(dbgenerated("0")) @db.VarChar(255)
+  left_money    String? @default(dbgenerated("0")) @db.VarChar(255)
+  address       String? @db.VarChar(255)
+  date_created  String  @db.VarChar(255)
+  users         users[]
+}
+
+model product {
+  id           Int         @id @default(autoincrement())
+  name         String      @db.VarChar(50)
+  count        String?     @default(dbgenerated("0")) @db.VarChar(255)
+  amount       String      @db.VarChar(50)
+  img          String?     @db.VarChar(255)
+  date_created Int
+  warehouse    warehouse[]
+}
+
+model warehouse {
+  id           Int      @id @default(autoincrement())
+  product_id   Int
+  count        Int
+  price        Int?
+  note         String
+  isused       Boolean? @default(true)
+  date_created Int
+  product      product  @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
