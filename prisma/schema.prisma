@@ -14,20 +14,20 @@ model roles {
 }
 
 model users {
-  id           Int       @id @default(autoincrement())
-  username     String    @unique @db.VarChar(255)
-  password     String    @db.VarChar(255)
-  name         String    @db.VarChar(255)
-  phone        String    @db.VarChar(10)
-  born_date    String?   @db.VarChar(255)
-  user_picture String?
+  id           Int         @id @default(autoincrement())
+  name         String      @db.VarChar(255)
+  password     String      @db.VarChar(255)
   role_id      Int
+  phone        String      @unique @db.VarChar(10)
+  born_date    String?     @db.VarChar(255)
+  user_picture String?
   magazine_id  Int?
-  date_created String    @db.VarChar(255)
-  magazins     magazins? @relation(fields: [magazine_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  roles        roles     @relation(fields: [role_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  date_created String      @db.VarChar(255)
+  magazins     magazins?   @relation(fields: [magazine_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  roles        roles       @relation(fields: [role_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   dress        dress[]
   sale         sale[]
+  salonlist    salonlist[]
 }
 
 model balance {
@@ -76,6 +76,7 @@ model salonlist {
   phone         String @db.VarChar(20)
   date_created  String @db.VarChar(255)
   user_id       Int
+  users         users  @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   sale          sale[]
 }
 
@@ -110,7 +111,7 @@ model magazins {
   id            Int     @id @default(autoincrement())
   name          String  @db.VarChar(255)
   img           String?
-  money         String? @db.VarChar(255)
+  money         String? @default(dbgenerated("0")) @db.VarChar(255)
   saled_dresses String? @default(dbgenerated("0")) @db.VarChar(255)
   left_money    String? @default(dbgenerated("0")) @db.VarChar(255)
   address       String? @db.VarChar(255)

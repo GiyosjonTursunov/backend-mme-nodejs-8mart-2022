@@ -43,7 +43,7 @@ class authController {
               password: hashPassword,
               roles: {
                 connect: {
-                  role: req.body.role,
+                  role: "SALON",
                 },
               },
               name: name,
